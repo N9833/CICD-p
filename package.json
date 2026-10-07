@@ -35,6 +35,10 @@
     "testEnvironment": "jsdom",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/e2e-tests/",
+      "<rootDir>/fs-pokedex/"
     ]
   },
   "devDependencies": {
