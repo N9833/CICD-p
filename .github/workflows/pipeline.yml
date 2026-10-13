@@ -33,3 +33,7 @@ jobs:
 
       - name: E2E tests
         run: npm run test:e2e
+
+      - name: Trigger Render deployment
+        if: success()
+        run: curl -fsS "${{ secrets.RENDER_DEPLOY_HOOK }}"
