@@ -57,3 +57,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+
+  notify_failure:
+    needs: [simple_deployment_pipeline]
+    if: ${{ always() && needs.simple_deployment_pipeline.result == 'failure' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Discord about failure
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: Failure
+          title: "Pokedex CI/CD pipeline failed"
+          description: |
+            The CI/CD pipeline failed.
+            Commit: ${{ github.sha }}
+            Message: ${{ github.event.head_commit.message || github.event.pull_request.title }}
+          username: GitHub Actions
+
+  notify_success:
+    needs: [simple_deployment_pipeline, tag_release]
+    if: ${{ always() && github.event_name == 'push' && needs.simple_deployment_pipeline.result == 'success' && needs.tag_release.result == 'success' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Discord about successful deployment
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: Success
+          title: "Pokedex deployed successfully"
+          description: |
+            A new version of Pokedex was deployed to Render.
+            Commit: ${{ github.sha }}
+          username: GitHub Actions
