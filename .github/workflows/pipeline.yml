@@ -29,6 +29,9 @@ jobs:
       - name: Check style
         run: npm run eslint
 
+      - name: Test Discord failure notification
+        run: exit 1
+
       - name: Build
         run: npm run build
 
