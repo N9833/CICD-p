@@ -1,5 +1,5 @@
 
-name: CI Pipeline
+name: Deployment pipeline
 
 on:
   push:
@@ -10,7 +10,34 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  simple_deployment_pipeline:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Check style
+        run: npm run eslint
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: E2E tests
+        run: npm run test:e2e
+
+      - name: Trigger Render deployment
+        if: ${{ github.event_name == 'push' }}
+        run: curl -fsS "${{ secrets.RENDER_DEPLOY_HOOK }}"
