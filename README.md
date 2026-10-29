@@ -22,3 +22,6 @@ Example Pokémon page:
 
 https://cicd-p.onrender.com/pokemon/spearow
 Testing the #skip workflow condition.
+## Course repository
+
+This repository contains my Full Stack Open CI/CD exercises.
