@@ -25,3 +25,6 @@ Testing the #skip workflow condition.
 ## Course repository
 
 This repository contains my Full Stack Open CI/CD exercises.
+## Source code
+
+[Pokédex app repository](https://github.com/N9833/CICD-p)
